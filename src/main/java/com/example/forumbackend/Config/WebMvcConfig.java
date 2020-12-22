@@ -1,6 +1,7 @@
 package com.example.forumbackend.Config;
 
 
+import com.example.forumbackend.Utils.FirstInterceptor;
 import com.example.forumbackend.Utils.MyInterceptor1;
 import com.example.forumbackend.Utils.MyInterceptorfirst;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private MyInterceptor1 myInterceptor1;
 
     @Autowired
-    private MyInterceptorfirst myInterceptorfirst;
+    private FirstInterceptor firstInterceptor;
 
     /**
      * 注册拦截器
@@ -22,6 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(firstInterceptor).addPathPatterns("/**");
         /*
          * addInterceptor 注册拦截器
          * addPathPatterns 配置拦截规则
