@@ -49,16 +49,7 @@ public class ChatController {
     @Value("${chatype.private}")
     private Integer PrivateType;
 
-/*
-    @PostMapping("{sendID}/to/{receiveID}")
-    public void sendToUser (@PathVariable("sendID") Integer sendID,
-                            @PathVariable("receiveID") Integer receiveID,String message){
-        System.out.println("sendid:\t"+sendID+"\treceiveID:\t"+receiveID+"\tmessage\t"+message);
-        if(sendID!=null&&receiveID!=null)
-            handler.sendMessageToUser(receiveID,new TextMessage(message));
-    }*/
-
-    @PostMapping("/sendprivate")
+    @GetMapping("/sendprivate")
     @Transactional
     @ApiOperation("发送私聊信息")
     @ApiResponses({
@@ -72,6 +63,7 @@ public class ChatController {
         if(uid.equals(receivedid))
             return Response.makeRsp(ResultCode.CANNOT_SEND_TO_YOURSELF.code, "不能自己给自己发");
         Chat chat=new Chat();
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         chat.setCreateTime(LocalDateTime.now());
         chat.setReceiveUID(receivedid);
@@ -85,7 +77,7 @@ public class ChatController {
         return Response.makeOKRsp(chat);
     }
 
-    @PostMapping("/sendgroup")
+    @GetMapping("/sendgroup")
     @Transactional
     @ApiOperation("发送群聊")
     @ApiResponses({
@@ -96,6 +88,7 @@ public class ChatController {
                                          @RequestParam @ApiParam("群id") Integer GID,
                                           @RequestParam @ApiParam("发送内容") String message) throws JsonProcessingException {
         Chat chat=new Chat();
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         chat.setCreateTime(LocalDateTime.now());
         chat.setGroupID(GID);
@@ -115,13 +108,14 @@ public class ChatController {
     }
 
 
-    @PostMapping("/CreateGroup")
+    @GetMapping("/CreateGroup")
     @Transactional
     @ApiOperation("创建群聊")
     public ResponseResult<ChatGroup> CreateGroup(
             @RequestParam @ApiParam("群名称") String name,
             @RequestParam @ApiParam("群介绍") String introduce,
             HttpServletResponse response,HttpServletRequest request){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         LocalDateTime now=LocalDateTime.now();
         ChatGroup group=new ChatGroup();
@@ -132,7 +126,7 @@ public class ChatController {
         return Response.makeOKRsp(group);
     }
 
-    @PostMapping("/addgroup")
+    @GetMapping("/addgroup")
     @Transactional
     @ApiOperation("加群")
     @ApiResponses({
@@ -142,6 +136,7 @@ public class ChatController {
     public ResponseResult<Boolean> AddGroup(@CookieValue("UID") Integer uid,
                                             @RequestParam @ApiParam("群id") Integer GID,
                                             HttpServletRequest request,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         ChatGroup group=chatGroupService.findByGID(GID);
         if(group==null){
@@ -156,6 +151,7 @@ public class ChatController {
     @ApiOperation("获取论坛群总数量")
     public ResponseResult<List<GroupItem>> getlist(Integer GID,
                                                    HttpServletResponse response,HttpServletRequest request){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatGroupService.getlist(GID));
     }
@@ -164,6 +160,7 @@ public class ChatController {
     @Transactional
     @ApiOperation("获取某用户的存在的私聊的人的数量")
     public  ResponseResult<Integer> getprivatecount(@CookieValue("UID") Integer uid,HttpServletRequest request,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatService.getprivatecount(uid));
     }
@@ -173,6 +170,7 @@ public class ChatController {
     @ApiOperation("获取与某用户存在的私聊的人的列表，按照最后发送时间来确定")
     public ResponseResult<List<Integer>> getprivatechatbytime(@CookieValue("UID")Integer uid,Integer pageindex,Integer pagesize,
                                                               HttpServletResponse response,HttpServletRequest request){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatService.getprivatechatbytime(uid,pageindex,pagesize));
     }
@@ -182,6 +180,7 @@ public class ChatController {
     @ApiOperation("获取与某用户存在聊天记录的群的列表，按照最后发送时间来确定")
     public ResponseResult<List<Integer>> getgroupchatbytime(@CookieValue("UID")Integer uid,Integer pageindex,Integer pagesize,
                                                             HttpServletRequest request,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatService.getgroupchatbytime(uid,pageindex,pagesize));
     }
@@ -193,6 +192,7 @@ public class ChatController {
             @CookieValue("UID")Integer uid,
             Integer senduid,Integer pagesize,
             HttpServletResponse response,HttpServletRequest request){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatService.getprivatechat(uid, senduid,  pagesize));
     }
@@ -204,6 +204,7 @@ public class ChatController {
             @CookieValue("UID")Integer uid,
             Integer senduid,Integer CID,Integer size,
             HttpServletRequest request,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatService.getprivatechat2(uid, senduid, CID,size));
     }
@@ -216,6 +217,7 @@ public class ChatController {
             @ApiResponse(code=102,message = "成功"),
     })
     public ResponseResult<List<Chat>> getgroupchat(@CookieValue("UID")Integer uid,Integer gid, Integer pagesize,HttpServletResponse response,HttpServletRequest request){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         if(!chatGroupService.verify(gid,uid))
             return Response.makeRsp(ResultCode.NOT_JOIN_GROUP.code, "尚未加群");
@@ -230,6 +232,7 @@ public class ChatController {
     })
     @ApiOperation("分页获取某群的聊天记录中早于某条特定记录的记录")
     public ResponseResult<List<Chat>> getgroupchat2(@CookieValue("UID")Integer uid,Integer gid,Integer cid, Integer size,HttpServletRequest request,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         if(!chatGroupService.verify(gid,uid))
             return Response.makeRsp(ResultCode.NOT_JOIN_GROUP.code, "尚未加群");
@@ -240,6 +243,7 @@ public class ChatController {
     @Transactional
     @ApiOperation("通过GID搜索群")
     public  ResponseResult<ChatGroup> search(Integer gid,HttpServletResponse response,HttpServletRequest request){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatGroupService.search(gid));
     }
@@ -248,6 +252,7 @@ public class ChatController {
     @Transactional
     @ApiOperation("模糊搜索群")
     public ResponseResult<List<ChatGroup>> search(String str,Integer pageindex,Integer pagesize,HttpServletRequest request,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Credentials","true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(chatGroupService.search(str, pageindex, pagesize));
     }

@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -51,7 +52,7 @@ public class ArticalController {
     @Value("${points.uploadartical}")
     private Integer pointsuploadartical;
 
-    @PostMapping("/picture")
+    @GetMapping("/picture")
     @ApiOperation("上传图片")
     @ApiResponses({
             @ApiResponse(code = 500,message = "上传失败"),
@@ -89,11 +90,11 @@ public class ArticalController {
         return Response.makeOKRsp("上传成功");
     }
 
-    @PostMapping("/artical")
+    @GetMapping("/uploadartical")
     @Transactional
     @ApiOperation("上传文章")
     public ResponseResult<ForumResource> uploadartical(HttpServletRequest request,HttpServletResponse response,
-                              @ApiParam("文章类，view和ID和RID置为null")@RequestBody Artical artical){
+                               Artical artical){
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         response.addHeader("Access-Control-Allow-Credentials","true");
         Integer uid=cookieUtil.getuid(request);
@@ -115,7 +116,7 @@ public class ArticalController {
         return Response.makeOKRsp(resource);
     }
 
-    @PutMapping("/artical")
+    @GetMapping("/artical")
     @Transactional
     @ApiOperation(value = "修改文章（只上传需要修改的字段，不需要的修改的字段留成null）")
     @ApiResponses({
@@ -123,7 +124,7 @@ public class ArticalController {
             @ApiResponse(code = 102,message = "修改成功")
     })
     public ResponseResult<Boolean> refineartical(HttpServletRequest request,HttpServletResponse response,
-                                                 @RequestBody Artical artical){
+                                                  Artical artical){
         artical.setView(null);
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         response.addHeader("Access-Control-Allow-Credentials","true");
@@ -190,9 +191,11 @@ public class ArticalController {
 
     @GetMapping("/articalsbyrids")
     @Transactional
-    public ResponseResult<List<Artical>> getarticalsbyrids(@RequestBody List<Integer> rids,HttpServletRequest request,HttpServletResponse response){
+    public ResponseResult<List<Artical>> getarticalsbyrids(Integer[] rids,HttpServletRequest request,HttpServletResponse response){
         response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
-        List<Artical> articals=articalService.findByRIDlist(rids);
+        List<Integer> tmp=new ArrayList<>();
+        tmp.addAll(Arrays.asList(rids));
+        List<Artical> articals=articalService.findByRIDlist(tmp);
         List<Integer> aids=new ArrayList<>();
         for(Artical artical:articals) {
             aids.add(artical.getID());

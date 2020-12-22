@@ -52,7 +52,8 @@ public class LoginController {
             @ApiParam(value = "账号",example = "513317651") @RequestParam String account,
             @ApiParam(value = "密码",example = "zz123456") @RequestParam String password){
         Role role=new Role();
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         String token=loginService.login(account,password,role);
         System.out.println("token:\t"+token);
         System.out.println("test account"+AccountNotExist);
@@ -82,7 +83,8 @@ public class LoginController {
             @ApiResponse(code=102,message = "成功登出")
     })
     public ResponseResult<User> logout(HttpServletRequest request,HttpServletResponse response){
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         Integer uid=cookieUtil.getuid(request);
         loginService.logout(uid);
         return Response.makeRsp(ResultCode.LOGOUT_SUCCESS.code, "成功登出");

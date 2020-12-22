@@ -46,7 +46,7 @@ public class ReplyController {
     @Value("${resourcetype.artical}")
     private Integer articaltype;
 
-    @PostMapping("/replyresource")
+    @GetMapping("/replyresource")
     @Transactional
     @ApiOperation(value = "评论资源")
     @ApiResponses({
@@ -57,7 +57,8 @@ public class ReplyController {
                                                @ApiParam(value = "资源RID") @RequestParam Integer rid,
                                                @ApiParam(value = "评论内容") @RequestParam String content){
         ForumResource resource=resourceService.findresourceByrid(rid);
-        response.addHeader("Access-Control-Allow-Credentials","true"); response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         System.out.println(resource);
         if(resource==null){
             return Response.makeRsp(ResultCode.RESOURCE_NOT_EXIST.code,"resource_id为"+rid+"的资源不存在");
@@ -74,20 +75,22 @@ public class ReplyController {
     @Transactional
     @ApiOperation(value = "获取某资源的评论")
     public ResponseResult<List<Reply>> getrepliesbyrid(
-            @RequestParam @ApiParam(value = "资源RID") Integer rid,
+            Integer rid,
             Integer pageindex,
             Integer pagesize,
             HttpServletResponse response,HttpServletRequest request){
-        response.addHeader("Access-Control-Allow-Credentials","true"); response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return  Response.makeOKRsp(replyService.getrepliesbyrid(rid,pageindex,pagesize));
     }
 
     @GetMapping("/replycountbyrid")
     @Transactional
     @ApiOperation(value = "获取某资源评论数量")
-    public  ResponseResult<Integer> replycountbyrid( @RequestParam @ApiParam(value = "资源RID") Integer rid,
+    public  ResponseResult<Integer> replycountbyrid( Integer rid,
                                                      HttpServletRequest request,HttpServletResponse response){
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(replyService.getcountbyrid(rid));
     }
 }

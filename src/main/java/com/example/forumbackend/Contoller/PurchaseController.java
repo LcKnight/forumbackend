@@ -44,7 +44,7 @@ public class PurchaseController {
     @Value("${resourcetype.artical}")
     private Integer articaltype;
 
-    @PostMapping("/purchase")
+    @GetMapping("/purchase")
     @Transactional
     @ApiOperation(value = "购买资源")
     @ApiResponses({
@@ -57,7 +57,8 @@ public class PurchaseController {
     public ResponseResult<Purchase> pur(HttpServletRequest request, HttpServletResponse response,
                                         @RequestParam @ApiParam(value = "购买资源的RID") Integer rid){
         Integer uid=cookieUtil.getuid(request);
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         ForumResource resource=resourceService.findresourceByrid(rid);
         if(resource==null)
             return Response.makeRsp(ResultCode.RESOURCE_NOT_EXIST.code, "请求资源不存在");
@@ -86,7 +87,8 @@ public class PurchaseController {
     @Transactional
     @ApiOperation("获取请求用户购买过的资源数量")
     public ResponseResult<Integer> getcountbyuid(HttpServletRequest request,HttpServletResponse response){
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         Integer uid=cookieUtil.getuid(request);
         return Response.makeOKRsp(purchaseService.getcountbyuid(uid));
     }
@@ -99,7 +101,8 @@ public class PurchaseController {
             @RequestParam @ApiParam(value = "页索引") Integer pageindex,
             @RequestParam @ApiParam(value = "页号码")Integer pagesize){
         Integer uid=cookieUtil.getuid(request);
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         return Response.makeOKRsp(purchaseService.getpurchasesbyuid(uid,pageindex,pagesize));
     }
 
@@ -117,7 +120,8 @@ public class PurchaseController {
             @RequestParam @ApiParam(value = "页索引") Integer pageindex,
             @RequestParam @ApiParam(value = "页号码")Integer pagesize){
         Integer uid=cookieUtil.getuid(request);
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         ForumResource resource=resourceService.findresourceByrid(rid);
         if(resource==null)
             return  Response.makeRsp(ResultCode.RESOURCE_NOT_EXIST.code, "请求资源不存在");

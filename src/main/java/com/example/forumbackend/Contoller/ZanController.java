@@ -31,11 +31,12 @@ public class ZanController {
     @Autowired
     private CookieUtil cookieUtil;
 
-    @PostMapping("/addzan")
+    @GetMapping("/addzan")
     @ApiOperation(value = "点赞某资源")
     @Transactional
     public ResponseResult<Zan> Zan_Resource(HttpServletRequest request, HttpServletResponse response, Integer rid){
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         Integer uid=cookieUtil.getuid(request);
         ForumResource resource=resourceService.findresourceByrid(rid);
         if(resource==null)
@@ -47,12 +48,13 @@ public class ZanController {
         return Response.makeOKRsp(zan);
     }
 
-    @DeleteMapping("/deletezan")
+    @GetMapping("/deletezan")
     @ApiOperation(value = "取消点赞")
     @Transactional
     public  ResponseResult<Zan> deletezan(HttpServletRequest request,HttpServletResponse response,Integer rid){
         Integer uid=cookieUtil.getuid(request);
-        response.addHeader("Access-Control-Allow-Credentials","true"); response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         ForumResource resource=resourceService.findresourceByrid(rid);
         if(resource==null)
             return Response.makeRsp(ResultCode.RESOURCE_NOT_EXIST.code, "点赞资源不存在");
@@ -67,7 +69,8 @@ public class ZanController {
     @ApiOperation(value = "查询用户是否点赞了某资源")
     public ResponseResult<Boolean> if_zann(HttpServletRequest request,HttpServletResponse response,Integer rid){
         Integer uid=cookieUtil.getuid(request);
-        response.addHeader("Access-Control-Allow-Credentials","true"); response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         Zan zan=zanService.findByRID_UID(rid,uid);
         return Response.makeOKRsp(zan != null);
     }
@@ -75,7 +78,8 @@ public class ZanController {
     @GetMapping("/getzancount")
     @ApiOperation(value = "获得资源的赞数量")
     public ResponseResult<Integer> getrzan(Integer rid,HttpServletResponse response,HttpServletRequest request){
-        response.addHeader("Access-Control-Allow-Credentials","true");response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         ForumResource forumResource=resourceService.findresourceByrid(rid);
         return Response.makeOKRsp(forumResource==null?0:forumResource.getZan());
     }
